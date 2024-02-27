@@ -16,6 +16,7 @@ if number_of_players > 5 or number_of_players < 1:
     number_of_players = 1
 
 players = [[] for i in range(number_of_players)]
+stop_list_players = []
 
 def calculate_points(cards:List)->int:
     points = 0
@@ -29,22 +30,33 @@ def calculate_points(cards:List)->int:
     
     return points
 
-
 while True:
     for i in range(number_of_players):
-        if len(deck_in_game):
+        if len(deck_in_game) and i not in stop_list_players:
             card = deck_in_game[random.randint(0, len(deck_in_game)-1)]
             players[i].append(card)
-            print_players = ' '.join(players[i])
-            print(f'Player #{i+1}: {print_players}  | {calculate_points(players[i])} |')
             deck_in_game.remove(card)
         else:
-            print('We have run out of cards')
-            break
+            if not len(deck_in_game):
+                print('We have run out of cards')
+            elif number_of_players == len(stop_list_players):
+                print('Dealer cards: ')
+                break
+        
+        print_players = ' '.join(players[i])
+        print(f'Player #{i+1}: {print_players}  | {calculate_points(players[i])} |')
 
-    move = input('More(m), Stop(s), Player #n stop(ns) ').split(',')
-    if move[0] == 's':
+    move = input('More(m), Stop(s), Player #n stop(ns) ') # need split() for stop several players
+    if move == 's':
         break
+    elif len(move) == 2 and move[-1] == 's':
+        try:
+            stop_list_players.append(int(move[0])-1)
+        except:
+            yes_or_no = input('Bad command. Continue game?(y/n) ')
+            if yes_or_no == 'n':
+                break
+            
 
 
             

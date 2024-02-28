@@ -18,6 +18,7 @@ if number_of_players > 5 or number_of_players < 1:
 players = [[] for i in range(number_of_players)]
 stop_list_players = []
 
+
 def calculate_points(cards:List)->int:
     points = 0
     for card in cards:
@@ -29,6 +30,24 @@ def calculate_points(cards:List)->int:
             points += int(card[1:])
     
     return points
+
+
+def is_possible_add_to_stop_list(command: str)->bool:
+    if len(command) == 2 and command[-1] == 's':
+        try:
+            players_id = int(command[0])
+            return True
+        except:
+            return False
+
+
+def add_player_to_stop_list(i:int)->bool:
+    try:
+        stop_list_players.append(i-1)
+        return True
+    except:
+        return False
+    
 
 while True:
     for i in range(number_of_players):
@@ -46,20 +65,14 @@ while True:
         print_players = ' '.join(players[i])
         print(f'Player #{i+1}: {print_players}  | {calculate_points(players[i])} |')
 
-    move = input('More(m), Stop(s), Player #n stop(ns) ') # need split() for stop several players
-    if move == 's':
+    move = input('More(m), Stop(s), Player #n stop(ns) ').split(' ')
+    if move[0] == 's':
         break
-    elif len(move) == 2 and move[-1] == 's':
-        try:
-            stop_list_players.append(int(move[0])-1)
-        except:
-            yes_or_no = input('Bad command. Continue game?(y/n) ')
-            if yes_or_no == 'n':
-                break
+    elif len(move) > 0:
+        for i in move:
+            if is_possible_add_to_stop_list(i):
+                if not add_player_to_stop_list(int(i[0])):
+                    yes_or_no = input('Bad command. Continue game?(y/n) ') # check it
+                    if yes_or_no == 'n':
+                        break
             
-
-
-            
-
-
-    

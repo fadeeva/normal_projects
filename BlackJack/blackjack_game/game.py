@@ -41,12 +41,11 @@ def is_possible_add_to_stop_list(command: str)->bool:
             return False
 
 
-def add_player_to_stop_list(i:int)->bool:
-    try:
-        stop_list_players.append(i-1)
+def add_player_to_stop_list(command:str)->bool:
+    if is_possible_add_to_stop_list(command):
+        stop_list_players.append(int(command[0])-1)
         return True
-    except:
-        return False
+    return False
     
 
 while True:
@@ -66,13 +65,21 @@ while True:
         print(f'Player #{i+1}: {print_players}  | {calculate_points(players[i])} |')
 
     move = input('More(m), Stop(s), Player #n stop(ns) ').split(' ')
-    if move[0] == 's':
-        break
-    elif len(move) > 0:
-        for i in move:
-            if is_possible_add_to_stop_list(i):
-                if not add_player_to_stop_list(int(i[0])):
-                    yes_or_no = input('Bad command. Continue game?(y/n) ') # check it
-                    if yes_or_no == 'n':
-                        break
+
+    if len(move) > 0:
+        if len(move)==1:
+            if move[0] == 's':
+                break
+            elif move[0] == 'm':
+                continue
+            
+        for i in move: # tyt voobsche pizdec kakoi-to
+            if not add_player_to_stop_list(i):
+                yes_or_no = input('Bad command. Continue game?(y/n) ') # check it
+                if yes_or_no == 'n':
+                    break
+                elif yes_or_no == 'y':
+                    continue
+            else:
+                continue
             

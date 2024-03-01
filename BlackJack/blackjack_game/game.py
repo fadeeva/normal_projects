@@ -48,6 +48,24 @@ def add_player_to_stop_list(command:str)->bool:
     return False
     
 
+def execute_command(command:List)->bool:
+    if len(command) > 0:
+        for i in command:
+            if i == 's':
+                return False
+            elif i == 'm':
+                return True
+            elif not add_player_to_stop_list(i):
+                yes_or_no = input('Bad command. Continue game?(y/n) ') # check it
+                if yes_or_no == 'n':
+                    return False
+                elif yes_or_no == 'y':
+                    continue
+            else:
+                continue
+    return True
+
+
 while True:
     for i in range(number_of_players):
         if len(deck_in_game) and i not in stop_list_players:
@@ -64,22 +82,9 @@ while True:
         print_players = ' '.join(players[i])
         print(f'Player #{i+1}: {print_players}  | {calculate_points(players[i])} |')
 
-    move = input('More(m), Stop(s), Player #n stop(ns) ').split(' ')
-
-    if len(move) > 0:
-        if len(move)==1:
-            if move[0] == 's':
-                break
-            elif move[0] == 'm':
-                continue
-            
-        for i in move: # tyt voobsche pizdec kakoi-to
-            if not add_player_to_stop_list(i):
-                yes_or_no = input('Bad command. Continue game?(y/n) ') # check it
-                if yes_or_no == 'n':
-                    break
-                elif yes_or_no == 'y':
-                    continue
-            else:
-                continue
+    command = input('More(m), Stop(s), Player #n stop(ns) ').split(' ')
+    if execute_command(command):
+        continue
+    break
+    
             

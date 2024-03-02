@@ -18,6 +18,7 @@ if number_of_players > 5 or number_of_players < 1:
 players = [[] for i in range(number_of_players)]
 stop_list_players = []
 
+dealer = []
 
 def calculate_points(cards:List)->int:
     points = 0
@@ -56,7 +57,7 @@ def execute_command(command:List)->bool:
             elif i == 'm':
                 return True
             elif not add_player_to_stop_list(i):
-                yes_or_no = input('Bad command. Continue game?(y/n) ') # check it
+                yes_or_no = input('Bad command. Continue game?(y/n) ')
                 if yes_or_no == 'n':
                     return False
                 elif yes_or_no == 'y':
@@ -66,25 +67,51 @@ def execute_command(command:List)->bool:
     return True
 
 
+def get_card()->None:
+    return deck_in_game[random.randint(0, len(deck_in_game)-1)]
+
+
+def get_dealer_cards():
+    for j in range(5):
+        if len(deck_in_game):
+            if calculate_points(dealer) > 17:
+                break
+            card = get_card()
+            dealer.append(card)
+            deck_in_game.remove(card)
+            
+    
+
+def show_all_dealer_cards()->None:
+    print_dealer = ' '.join(dealer)
+    print(f'Dealer cards:  {print_dealer}  | {calculate_points(dealer)} |')
+    
+    
 while True:
     for i in range(number_of_players):
         if len(deck_in_game) and i not in stop_list_players:
-            card = deck_in_game[random.randint(0, len(deck_in_game)-1)]
+            card = get_card()
             players[i].append(card)
             deck_in_game.remove(card)
         else:
             if not len(deck_in_game):
                 print('We have run out of cards')
+                break
             elif number_of_players == len(stop_list_players):
-                print('Dealer cards: ')
                 break
         
         print_players = ' '.join(players[i])
         print(f'Player #{i+1}: {print_players}  | {calculate_points(players[i])} |')
-
-    command = input('More(m), Stop(s), Player #n stop(ns) ').split(' ')
-    if execute_command(command):
-        continue
+    
+    
+    if number_of_players != len(stop_list_players):
+        command = input('More(m), Stop(s), Player #n stop(ns) ').split(' ')
+        if execute_command(command):
+            continue
+    
+    get_dealer_cards()
+    show_all_dealer_cards()
+    
     break
     
             

@@ -6,8 +6,6 @@ from typing import List, Set, Dict, Tuple
 with open('deck.pickle', 'rb') as f:
     deck = pickle.load(f)
 
-DECK_LEN = 52
-
 deck_in_game = deck.copy()
 random.shuffle(deck_in_game)
 
@@ -80,15 +78,26 @@ def get_dealer_cards():
             dealer.append(card)
             deck_in_game.remove(card)
             
-    
 
 def show_all_dealer_cards()->None:
     print_dealer = ' '.join(dealer)
+    print('------------------------')
     print(f'Dealer cards:  {print_dealer}  | {calculate_points(dealer)} |')
-    
+    print('------------------------')
+
+
+def show_player_cards(player_id:int)->None:
+    print_players = ' '.join(players[player_id])
+    print(f'Player #{player_id+1}: {print_players}  | {calculate_points(players[player_id])} |')
+
     
 while True:
     for i in range(number_of_players):
+        if i == 0 and len(dealer) == 0:
+            card = get_card()
+            dealer.append(card)
+            deck_in_game.remove(card)
+            
         if len(deck_in_game) and i not in stop_list_players:
             card = get_card()
             players[i].append(card)
@@ -100,9 +109,9 @@ while True:
             elif number_of_players == len(stop_list_players):
                 break
         
-        print_players = ' '.join(players[i])
-        print(f'Player #{i+1}: {print_players}  | {calculate_points(players[i])} |')
-    
+        show_player_cards(i)
+        
+    show_all_dealer_cards()
     
     if number_of_players != len(stop_list_players):
         command = input('More(m), Stop(s), Player #n stop(ns) ').split(' ')
@@ -114,4 +123,3 @@ while True:
     
     break
     
-            

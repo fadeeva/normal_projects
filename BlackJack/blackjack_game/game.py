@@ -90,7 +90,29 @@ def show_player_cards(player_id:int)->None:
     print_players = ' '.join(players[player_id])
     print(f'Player #{player_id+1}: {print_players}  | {calculate_points(players[player_id])} |')
 
+
+def show_winner()->None:
+    players_points = []
+    dealer_points = calculate_points(dealer)
     
+    if dealer_points > 21:
+        dealer_points = 0
+    
+    for i in players:
+        p = calculate_points(i)
+        if p > 21:
+            p = 0
+        players_points.append(p)
+    
+    print('------------------------')
+    if dealer_points > max(players_points):
+        print(f'WINNER: Dealer, with: {dealer_points}')
+    else:
+        print(f'WINNER: Player #{players_points.index(max(players_points)) + 1}')
+    print('------------------------')
+    
+
+
 while True:
     for i in range(number_of_players):
         if i == 0 and len(dealer) == 0:
@@ -109,6 +131,9 @@ while True:
             elif number_of_players == len(stop_list_players):
                 break
         
+        if calculate_points(players[i]) == 21: # govnokod
+            stop_list_players.append(i)        # govnokod
+        
         show_player_cards(i)
         
     show_all_dealer_cards()
@@ -120,6 +145,7 @@ while True:
     
     get_dealer_cards()
     show_all_dealer_cards()
+    show_winner()
     
     break
     
